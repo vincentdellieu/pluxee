@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de Test - Compteur Pluxee (Bannière V4)</title>
+    <title>Page de Test - Compteur Pluxee (V5 - Fix)</title>
 
     <style>
         :root {
@@ -22,10 +22,10 @@
             color: #333;
         }
         
-        /* Conteneur pour le test (simule la largeur de votre site) */
+        /* Conteneur pour le test */
         .test-container {
             padding: 20px;
-            max-width: 1200px; /* Largeur max de votre site */
+            max-width: 1200px; 
             margin: 0 auto;
             text-align: center;
         }
@@ -34,46 +34,67 @@
          */
         
         /* --- MOBILE (par défaut) --- */
-        /* Design "Mobile-First" basé sur 320x100px */
         .plx-fomo-banner {
             width: 100%;
             max-width: 450px; 
-            min-height: 100px; /* Hauteur minimale demandée */
-            
+            min-height: 100px; 
             background-color: var(--plx-white);
             border: 1px solid var(--plx-light-grey);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            
             margin: 20px auto; 
             box-sizing: border-box;
             overflow: hidden;
             color: var(--plx-dark-blue);
-            border-radius: 12px; /* Coins arrondis pour le widget mobile */
+            border-radius: 12px;
         }
 
         /* En-tête du titre (bandeau sombre) */
         .plx-banner-header {
             background-color: var(--plx-dark-blue);
             color: var(--plx-white);
-            padding: 8px 10px; /* Moins de padding sur mobile */
-            text-align: center;
+            padding: 8px 10px; 
             font-weight: bold;
-            font-size: 14px; /* Plus petit sur mobile */
-            border-radius: 12px 12px 0 0; /* Coins arrondis seulement en haut */
+            font-size: 14px; 
+            border-radius: 12px 12px 0 0; 
+            
+            /* NOUVEAU: Utilisation de flex pour aligner l'icône et le texte */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* NOUVEAU: Style de l'icône "i" */
+        .plx-header-icon {
+            fill: var(--plx-green);
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            flex-shrink: 0; /* Empêche l'icône de s'écraser */
         }
 
         /* Corps de la bannière (contenu principal) */
         .plx-banner-body {
             display: flex;
-            flex-direction: column; /* Pile verticalement sur mobile */
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
-            padding: 10px; /* Moins de padding sur mobile */
+            padding: 10px; 
         }
+
+        /* NOUVEAU: Correction pour la barre mobile */
+        /* Forcer toutes les colonnes à prendre 100% de largeur */
+        .plx-banner-col {
+            width: 100%;
+        }
+        .plx-banner-col-text,
+        .plx-banner-col-remaining {
+            text-align: center; /* Centrer le texte sur mobile */
+        }
+
 
         /* Texte principal (Rejoignez les X...) */
         #plx-main-counter {
-            font-size: 14px; /* Plus petit sur mobile */
+            font-size: 14px; 
             margin: 0 0 6px 0;
             line-height: 1.2;
         }
@@ -88,17 +109,17 @@
 
         .plx-progress-label-start,
         .plx-progress-label-end {
-            font-size: 12px; /* Plus petit sur mobile */
+            font-size: 12px; 
             font-weight: bold;
             color: var(--plx-dark-blue);
         }
 
         .plx-progress-bar-container {
             flex-grow: 1;
-            height: 10px; /* Hauteur de la barre plus petite sur mobile */
+            height: 10px; 
             background-color: var(--plx-light-grey);
             border-radius: 10px;
-            margin: 0 8px; /* Marge réduite sur mobile */
+            margin: 0 8px; 
             overflow: hidden;
         }
 
@@ -112,7 +133,7 @@
         
         /* Texte des places restantes */
         #plx-remaining-text {
-            font-size: 14px; /* Plus petit sur mobile */
+            font-size: 14px; 
             font-weight: bold;
             margin: 0;
         }
@@ -121,80 +142,92 @@
         #plx-count-total,
         #plx-count-remaining {
             color: var(--plx-green);
-            font-size: 1.1em; /* Légèrement plus petit sur mobile */
+            font-size: 1.1em;
         }
 
 
         /* --- DESKTOP (à partir de 992px) --- */
-        /* Design "Desktop" basé sur 1200x150px */
-        
         @media (min-width: 992px) {
             .plx-fomo-banner {
                 max-width: none; 
                 min-height: 150px;
                 margin: 20px 0; 
-                border-radius: 0; /* Pas de coins arrondis en mode bandeau */
+                border-radius: 0;
             }
 
             .plx-banner-header {
-                font-size: 20px; /* Taille normale sur desktop */
+                font-size: 20px; 
                 padding: 15px 20px;
-                border-radius: 0; /* Pas de coins arrondis pour le header non plus */
+                border-radius: 0;
+            }
+            
+            /* NOUVEAU: Agrandir l'icône sur desktop */
+            .plx-header-icon {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
             }
 
             .plx-banner-body {
-                flex-direction: row; /* Horizontal sur desktop */
+                flex-direction: row; 
                 justify-content: space-between;
                 align-items: center;
-                padding: 20px 40px; /* Plus de padding sur desktop */
+                padding: 20px 40px; 
             }
 
-            /* Colonnes flexibles pour aligner les éléments */
+            /* Rétablissement des largeurs de colonnes pour desktop */
+            .plx-banner-col {
+                width: auto; /* Annule le width: 100% du mobile */
+            }
             .plx-banner-col-text {
                 flex-basis: 40%;
-                text-align: left;
+                text-align: left; /* Rétablir l'alignement à gauche */
             }
             .plx-banner-col-progress {
                 flex-basis: 35%;
             }
             .plx-banner-col-remaining {
                 flex-basis: 25%;
-                text-align: right;
+                text-align: right; /* Rétablir l'alignement à droite */
             }
             
             #plx-main-counter {
-                font-size: 18px; /* Taille normale sur desktop */
-                margin: 0; /* Pas de marge basse */
+                font-size: 18px; 
+                margin: 0;
             }
 
             .plx-progress-bar-container {
-                height: 20px; /* Hauteur de la barre plus grande sur desktop */
+                height: 20px;
             }
             .plx-progress-label-start,
             .plx-progress-label-end {
-                font-size: 14px; /* Taille normale sur desktop */
+                font-size: 14px; 
             }
 
             #plx-remaining-text {
-                font-size: 20px; /* Taille normale sur desktop */
+                font-size: 20px; 
             }
 
             #plx-count-total,
             #plx-count-remaining {
-                font-size: 1.2em; /* Taille normale sur desktop */
+                font-size: 1.2em;
             }
         }
-
     </style>
 </head>
 <body>
 
     <div class="test-container">
-       
+        <h1>Page de Test - Bannière Pluxee (V5)</h1>
+        <p><strong>TESTEZ LE RESPONSIVE :</strong> Réduisez la largeur de votre fenêtre pour voir la version mobile (barre de progression visible) et agrandissez-la (plus de 992px) pour voir la version desktop.</p>
+
         <div class="plx-fomo-banner">
           
             <div class="plx-banner-header">
-                Offre exclusive limitée aux premiers 500 inscrits
+                <svg class="plx-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+                </svg>
+                <span>Offre exclusive limitée aux premiers 500 inscrits</span>
             </div>
 
             <div class="plx-banner-body">
@@ -217,7 +250,11 @@
                 </div>
             </div>
             
-     
+        </div>
+
+        <p>(Contenu de la page qui continuerait ici...)</p>
+    </div>
+
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -228,15 +265,13 @@
         
         // --- Paramètres de la campagne ---
         const dureeEnJours = 90;
-        const inscriptionsInitiales = 121;
+        const inscriptionsInitiales = 100;
         const inscriptionsTotalesCibles = 500;
         
-        // Calcul des variables
-        const inscriptionsASimuler = inscriptionsTotalesCibles - inscriptionsInitiales; // 400
+        const inscriptionsASimuler = inscriptionsTotalesCibles - inscriptionsInitiales;
         const dateDeFin = new Date(dateDeLancement.getTime() + dureeEnJours * 24 * 60 * 60 * 1000);
         const dureeTotaleMs = dateDeFin.getTime() - dateDeLancement.getTime();
         
-        // Sélection des éléments HTML
         const elTotal = document.getElementById('plx-count-total');
         const elRemaining = document.getElementById('plx-count-remaining');
         const elProgressBar = document.getElementById('plx-progress-bar-inner');
@@ -246,7 +281,6 @@
             return;
         }
         
-        // On réinitialise la simulation à chaque chargement de la page de test pour mieux voir l'effet.
         localStorage.setItem('plxFakeSignups', '0');
 
         function mettreAJourCompteur() {
@@ -264,12 +298,8 @@
                 pourcentageEcoule = 1;
             }
 
-            // 1. Calcul des inscriptions "de base" basées sur le temps
             const inscriptionsDeBase = Math.floor(inscriptionsASimuler * pourcentageEcoule);
-
-            // 2. Ajout de la simulation "live"
             let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
-            
             let totalInscriptionsActuelles = inscriptionsInitiales + inscriptionsDeBase + inscriptionsSimuleesLive;
 
             if (totalInscriptionsActuelles > inscriptionsTotalesCibles) {
@@ -284,4 +314,33 @@
             const pourcentageComplet = (total / inscriptionsTotalesCibles) * 100;
 
             elTotal.textContent = total;
+            elRemaining.textContent = restantes + (restantes <= 1 ? ' place' : ' places');
+            elProgressBar.style.width = Math.min(100, pourcentageComplet) + '%';
+        }
 
+        function simulerInscription() {
+            if (new Date() < dateDeLancement || new Date() > dateDeFin) {
+                return;
+            }
+
+            let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
+            inscriptionsSimuleesLive++;
+            localStorage.setItem('plxFakeSignups', inscriptionsSimuleesLive.toString());
+
+            mettreAJourCompteur();
+            
+            const delaiAleatoire = Math.floor(Math.random() * (30000 - 8000 + 1)) + 8000;
+            setTimeout(simulerInscription, delaiAleatoire);
+        }
+
+        // --- Initialisation ---
+        mettreAJourCompteur();
+        
+        const premierDelai = Math.floor(Math.random() * (12000 - 5000 + 1)) + 5000;
+        setTimeout(simulerInscription, premierDelai);
+
+    });
+    </script>
+
+</body>
+</html>
