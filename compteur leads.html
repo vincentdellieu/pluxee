@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de Test - Compteur Pluxee</title>
+
+    <style>
+        :root {
+            --plx-green: #00EB5E; /* Vert vif principal de Pluxee */
+            --plx-dark-blue: #231C46; /* Bleu/Violet foncé de Pluxee */
+            --plx-light-grey: #f0f2f5; /* Gris clair pour le fond */
+            --plx-white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #333;
+        }
+        
+        h1 {
+            color: var(--plx-dark-blue);
+        }
+
+        .plx-fomo-widget {
+            font-family: 'Arial', sans-serif; 
+            background-color: var(--plx-white);
+            border: 1px solid var(--plx-light-grey);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            max-width: 350px;
+            margin: 20px auto; 
+            overflow: hidden; 
+        }
+
+        /* En-tête */
+        .plx-fomo-widget .plx-header {
+            background-color: var(--plx-dark-blue);
+            color: var(--plx-white);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .plx-fomo-widget .plx-header svg {
+            fill: var(--plx-green);
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Corps du compteur */
+        .plx-fomo-widget .plx-counter-body {
+            padding: 20px;
+            text-align: center;
+            color: var(--plx-dark-blue);
+        }
+
+        .plx-fomo-widget .plx-counter-body p {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.4;
+        }
+
+        .plx-fomo-widget .plx-counter-body strong {
+            color: var(--plx-green); /* Met en valeur les chiffres */
+            font-size: 1.2em; /* Rend les chiffres plus grands */
+        }
+
+        /* Barre de progression */
+        .plx-progress-bar-container {
+            background-color: var(--plx-light-grey);
+            border-radius: 20px;
+            height: 16px;
+            margin: 16px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #plx-progress-bar-inner {
+            background-color: var(--plx-green);
+            height: 100%;
+            width: 20%; /* Démarrera à 100/500 = 20% */
+            border-radius: 20px;
+            transition: width 0.8s ease-out; /* Animation fluide */
+        }
+
+        /* Texte des places restantes */
+        .plx-fomo-widget .plx-remaining {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .plx-fomo-widget .plx-remaining strong {
+            font-size: 1.1em; /* Un peu plus petit que le total */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Page de Test - Compteur Pluxee</h1>
+    <p>Voici le rendu du compteur. Rafraîchissez la page pour le réinitialiser.</p>
+    <p><strong>Note :</strong> Attendez quelques secondes pour voir une inscription "live" s'ajouter.</p>
+
+    <div class="plx-fomo-widget">
+        <div class="plx-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+            </svg>
+            <span>Offre Exclusive à Durée Limitée</span>
+        </div>
+        
+        <div class="plx-counter-body">
+            <p>Rejoignez les <strong id="plx-count-total">100</strong> entreprises déjà inscrites !</p>
+            
+            <div class="plx-progress-bar-container">
+                <div id="plx-progress-bar-inner"></div>
+            </div>
+            
+            <p class="plx-remaining">
+                Plus que <strong id="plx-count-remaining">400</strong> places disponibles.
+            </p>
+        </div>
+    </div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- CONFIGURATION MODIFIÉE POUR LE TEST ---
+        // J'ai mis une date de lancement DANS LE PASSÉ (il y a 20 jours)
+        // pour que vous puissiez voir la progression tout de suite.
+        const joursDansLePasse = 20; 
+        const dateDeLancement = new Date(new Date().getTime() - joursDansLePasse * 24 * 60 * 60 * 1000);
+        // !! N'oubliez pas de remettre votre VRAIE date de lancement pour la production !!
+        
+        // --- Paramètres de la campagne ---
+        const dureeEnJours = 90;
+        const inscriptionsInitiales = 100;
+        const inscriptionsTotalesCibles = 500;
+        
+        // Calcul des variables
+        const inscriptionsASimuler = inscriptionsTotalesCibles - inscriptionsInitiales; // 400
+        const dateDeFin = new Date(dateDeLancement.getTime() + dureeEnJours * 24 * 60 * 60 * 1000);
+        const dureeTotaleMs = dateDeFin.getTime() - dateDeLancement.getTime();
+        
+        // Sélection des éléments HTML
+        const elTotal = document.getElementById('plx-count-total');
+        const elRemaining = document.getElementById('plx-count-remaining');
+        const elProgressBar = document.getElementById('plx-progress-bar-inner');
+        const widget = document.querySelector('.plx-fomo-widget');
+
+        if (!widget || !elTotal || !elRemaining || !elProgressBar) {
+            console.warn('Éléments du compteur Pluxee non trouvés. Le script est arrêté.');
+            return;
+        }
+        
+        // Stockage local pour la simulation "live"
+        // On le réinitialise à chaque chargement de la page de test pour mieux voir l'effet.
+        localStorage.setItem('plxFakeSignups', '0');
+
+        function mettreAJourCompteur() {
+            const maintenant = new Date();
+            
+            if (maintenant < dateDeLancement) {
+                afficherValeurs(inscriptionsInitiales);
+                return;
+            }
+
+            const tempsEcouleMs = maintenant.getTime() - dateDeLancement.getTime();
+            let pourcentageEcoule = tempsEcouleMs / dureeTotaleMs;
+
+            if (pourcentageEcoule > 1) {
+                pourcentageEcoule = 1;
+            }
+
+            // 1. Calcul des inscriptions "de base" basées sur le temps
+            const inscriptionsDeBase = Math.floor(inscriptionsASimuler * pourcentageEcoule);
+
+            // 2. Ajout de la simulation "live"
+            let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
+            
+            let totalInscriptionsActuelles = inscriptionsInitiales + inscriptionsDeBase + inscriptionsSimuleesLive;
+
+            if (totalInscriptionsActuelles > inscriptionsTotalesCibles) {
+                totalInscriptionsActuelles = inscriptionsTotalesCibles;
+            }
+
+            afficherValeurs(totalInscriptionsActuelles);
+        }
+
+        function afficherValeurs(total) {
+            const restantes = Math.max(0, inscriptionsTotalesCibles - total); // S'assurer de ne pas aller en négatif
+            const pourcentageComplet = (total / inscriptionsTotalesCibles) * 100;
+
+            elTotal.textContent = total;
+            elRemaining.textContent = restantes + (restantes <= 1 ? ' place' : ' places');
+            elProgressBar.style.width = Math.min(100, pourcentageComplet) + '%'; // Bloquer la barre à 100%
+        }
+
+        // Fonction pour simuler une nouvelle inscription
+        function simulerInscription() {
+            if (new Date() < dateDeLancement || new Date() > dateDeFin) {
+                return;
+            }
+
+            let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
+            inscriptionsSimuleesLive++;
+            localStorage.setItem('plxFakeSignups', inscriptionsSimuleesLive.toString());
+
+            mettreAJourCompteur();
+            
+            console.log("Nouvelle inscription simulée ! Total live : " + inscriptionsSimuleesLive);
+
+            const delaiAleatoire = Math.floor(Math.random() * (30000 - 8000 + 1)) + 8000; // Entre 8 et 30 secondes
+            setTimeout(simulerInscription, delaiAleatoire);
+        }
+
+        // --- Initialisation ---
+        mettreAJourCompteur();
+        
+        const premierDelai = Math.floor(Math.random() * (12000 - 5000 + 1)) + 5000; // Entre 5 et 12 secondes
+        setTimeout(simulerInscription, premierDelai);
+
+    });
+    </script>
+
+</body>
+</html>
