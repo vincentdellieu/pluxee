@@ -3,128 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de Test - Compteur Pluxee</title>
+    <title>Page de Test - Compteur Pluxee (Bannière V4)</title>
 
     <style>
         :root {
-            --plx-green: #00EB5E; /* Vert vif principal de Pluxee */
-            --plx-dark-blue: #231C46; /* Bleu/Violet foncé de Pluxee */
-            --plx-light-grey: #f0f2f5; /* Gris clair pour le fond */
+            --plx-green: #00EB5E;
+            --plx-dark-blue: #231C46;
+            --plx-light-grey: #f0f2f5;
             --plx-white: #FFFFFF;
         }
 
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
             box-sizing: border-box;
             color: #333;
         }
         
-        h1 {
-            color: var(--plx-dark-blue);
+        /* Conteneur pour le test (simule la largeur de votre site) */
+        .test-container {
+            padding: 20px;
+            max-width: 1200px; /* Largeur max de votre site */
+            margin: 0 auto;
+            text-align: center;
         }
 
-        .plx-fomo-widget {
-            font-family: 'Arial', sans-serif; 
+        /* * STYLE DE LA BANNIÈRE FOMO
+         */
+        
+        /* --- MOBILE (par défaut) --- */
+        /* Design "Mobile-First" basé sur 320x100px */
+        .plx-fomo-banner {
+            width: 100%;
+            max-width: 450px; 
+            min-height: 100px; /* Hauteur minimale demandée */
+            
             background-color: var(--plx-white);
             border: 1px solid var(--plx-light-grey);
-            border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            max-width: 350px;
+            
             margin: 20px auto; 
-            overflow: hidden; 
+            box-sizing: border-box;
+            overflow: hidden;
+            color: var(--plx-dark-blue);
+            border-radius: 12px; /* Coins arrondis pour le widget mobile */
         }
 
-        /* En-tête */
-        .plx-fomo-widget .plx-header {
+        /* En-tête du titre (bandeau sombre) */
+        .plx-banner-header {
             background-color: var(--plx-dark-blue);
             color: var(--plx-white);
-            padding: 12px 16px;
+            padding: 8px 10px; /* Moins de padding sur mobile */
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px; /* Plus petit sur mobile */
+            border-radius: 12px 12px 0 0; /* Coins arrondis seulement en haut */
+        }
+
+        /* Corps de la bannière (contenu principal) */
+        .plx-banner-body {
+            display: flex;
+            flex-direction: column; /* Pile verticalement sur mobile */
+            justify-content: center;
+            align-items: center;
+            padding: 10px; /* Moins de padding sur mobile */
+        }
+
+        /* Texte principal (Rejoignez les X...) */
+        #plx-main-counter {
+            font-size: 14px; /* Plus petit sur mobile */
+            margin: 0 0 6px 0;
+            line-height: 1.2;
+        }
+
+        /* Conteneur de la barre de progression */
+        .plx-progress-bar-wrapper {
             display: flex;
             align-items: center;
+            width: 100%;
+            margin-bottom: 6px;
+        }
+
+        .plx-progress-label-start,
+        .plx-progress-label-end {
+            font-size: 12px; /* Plus petit sur mobile */
             font-weight: bold;
-            font-size: 16px;
-        }
-
-        .plx-fomo-widget .plx-header svg {
-            fill: var(--plx-green);
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-
-        /* Corps du compteur */
-        .plx-fomo-widget .plx-counter-body {
-            padding: 20px;
-            text-align: center;
             color: var(--plx-dark-blue);
         }
 
-        .plx-fomo-widget .plx-counter-body p {
-            margin: 0;
-            font-size: 18px;
-            line-height: 1.4;
-        }
-
-        .plx-fomo-widget .plx-counter-body strong {
-            color: var(--plx-green); /* Met en valeur les chiffres */
-            font-size: 1.2em; /* Rend les chiffres plus grands */
-        }
-
-        /* Barre de progression */
         .plx-progress-bar-container {
+            flex-grow: 1;
+            height: 10px; /* Hauteur de la barre plus petite sur mobile */
             background-color: var(--plx-light-grey);
-            border-radius: 20px;
-            height: 16px;
-            margin: 16px 0;
+            border-radius: 10px;
+            margin: 0 8px; /* Marge réduite sur mobile */
             overflow: hidden;
-            position: relative;
         }
 
         #plx-progress-bar-inner {
-            background-color: var(--plx-green);
             height: 100%;
-            width: 20%; /* Démarrera à 100/500 = 20% */
-            border-radius: 20px;
-            transition: width 0.8s ease-out; /* Animation fluide */
+            width: 20%; 
+            background-color: var(--plx-green);
+            border-radius: 10px;
+            transition: width 0.8s ease-out;
         }
-
+        
         /* Texte des places restantes */
-        .plx-fomo-widget .plx-remaining {
-            font-size: 16px;
+        #plx-remaining-text {
+            font-size: 14px; /* Plus petit sur mobile */
             font-weight: bold;
+            margin: 0;
         }
 
-        .plx-fomo-widget .plx-remaining strong {
-            font-size: 1.1em; /* Un peu plus petit que le total */
+        /* Styles des chiffres (en vert) */
+        #plx-count-total,
+        #plx-count-remaining {
+            color: var(--plx-green);
+            font-size: 1.1em; /* Légèrement plus petit sur mobile */
         }
+
+
+        /* --- DESKTOP (à partir de 992px) --- */
+        /* Design "Desktop" basé sur 1200x150px */
+        
+        @media (min-width: 992px) {
+            .plx-fomo-banner {
+                max-width: none; 
+                min-height: 150px;
+                margin: 20px 0; 
+                border-radius: 0; /* Pas de coins arrondis en mode bandeau */
+            }
+
+            .plx-banner-header {
+                font-size: 20px; /* Taille normale sur desktop */
+                padding: 15px 20px;
+                border-radius: 0; /* Pas de coins arrondis pour le header non plus */
+            }
+
+            .plx-banner-body {
+                flex-direction: row; /* Horizontal sur desktop */
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 40px; /* Plus de padding sur desktop */
+            }
+
+            /* Colonnes flexibles pour aligner les éléments */
+            .plx-banner-col-text {
+                flex-basis: 40%;
+                text-align: left;
+            }
+            .plx-banner-col-progress {
+                flex-basis: 35%;
+            }
+            .plx-banner-col-remaining {
+                flex-basis: 25%;
+                text-align: right;
+            }
+            
+            #plx-main-counter {
+                font-size: 18px; /* Taille normale sur desktop */
+                margin: 0; /* Pas de marge basse */
+            }
+
+            .plx-progress-bar-container {
+                height: 20px; /* Hauteur de la barre plus grande sur desktop */
+            }
+            .plx-progress-label-start,
+            .plx-progress-label-end {
+                font-size: 14px; /* Taille normale sur desktop */
+            }
+
+            #plx-remaining-text {
+                font-size: 20px; /* Taille normale sur desktop */
+            }
+
+            #plx-count-total,
+            #plx-count-remaining {
+                font-size: 1.2em; /* Taille normale sur desktop */
+            }
+        }
+
     </style>
 </head>
 <body>
-    <div class="plx-fomo-widget">
-        <div class="plx-header">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
-            </svg>
-            <span>Offre Exclusive à Durée Limitée</span>
-        </div>
-        
-        <div class="plx-counter-body">
-            <p>Rejoignez les <strong id="plx-count-total">100</strong> entreprises déjà inscrites !</p>
-            
-            <div class="plx-progress-bar-container">
-                <div id="plx-progress-bar-inner"></div>
+
+    <div class="test-container">
+       
+        <div class="plx-fomo-banner">
+          
+            <div class="plx-banner-header">
+                Offre exclusive limitée aux premiers 500 inscrits
+            </div>
+
+            <div class="plx-banner-body">
+                <div class="plx-banner-col plx-banner-col-text">
+                    <p id="plx-main-counter">Rejoignez les <strong id="plx-count-total">100</strong> entreprises déjà inscrites</p>
+                </div>
+                
+                <div class="plx-banner-col plx-banner-col-progress">
+                    <div class="plx-progress-bar-wrapper">
+                        <span class="plx-progress-label-start">0</span>
+                        <div class="plx-progress-bar-container">
+                            <div id="plx-progress-bar-inner"></div>
+                        </div>
+                        <span class="plx-progress-label-end">500</span>
+                    </div>
+                </div>
+                
+                <div class="plx-banner-col plx-banner-col-remaining">
+                    <p id="plx-remaining-text">Plus que <strong id="plx-count-remaining">400</strong> places disponibles</p>
+                </div>
             </div>
             
-            <p class="plx-remaining">
-                Plus que <strong id="plx-count-remaining">400</strong> places disponibles.
-            </p>
         </div>
+
+        <p>(Contenu de la page qui continuerait ici...)</p>
     </div>
 
 
@@ -132,15 +227,12 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         // --- CONFIGURATION MODIFIÉE POUR LE TEST ---
-        // J'ai mis une date de lancement DANS LE PASSÉ (il y a 20 jours)
-        // pour que vous puissiez voir la progression tout de suite.
         const joursDansLePasse = 20; 
         const dateDeLancement = new Date(new Date().getTime() - joursDansLePasse * 24 * 60 * 60 * 1000);
-        // !! N'oubliez pas de remettre votre VRAIE date de lancement pour la production !!
         
         // --- Paramètres de la campagne ---
         const dureeEnJours = 90;
-        const inscriptionsInitiales = 100;
+        const inscriptionsInitiales = 121;
         const inscriptionsTotalesCibles = 500;
         
         // Calcul des variables
@@ -152,15 +244,13 @@
         const elTotal = document.getElementById('plx-count-total');
         const elRemaining = document.getElementById('plx-count-remaining');
         const elProgressBar = document.getElementById('plx-progress-bar-inner');
-        const widget = document.querySelector('.plx-fomo-widget');
 
-        if (!widget || !elTotal || !elRemaining || !elProgressBar) {
+        if (!elTotal || !elRemaining || !elProgressBar) {
             console.warn('Éléments du compteur Pluxee non trouvés. Le script est arrêté.');
             return;
         }
         
-        // Stockage local pour la simulation "live"
-        // On le réinitialise à chaque chargement de la page de test pour mieux voir l'effet.
+        // On réinitialise la simulation à chaque chargement de la page de test pour mieux voir l'effet.
         localStorage.setItem('plxFakeSignups', '0');
 
         function mettreAJourCompteur() {
@@ -194,41 +284,7 @@
         }
 
         function afficherValeurs(total) {
-            const restantes = Math.max(0, inscriptionsTotalesCibles - total); // S'assurer de ne pas aller en négatif
+            const restantes = Math.max(0, inscriptionsTotalesCibles - total);
             const pourcentageComplet = (total / inscriptionsTotalesCibles) * 100;
 
             elTotal.textContent = total;
-            elRemaining.textContent = restantes + (restantes <= 1 ? ' place' : ' places');
-            elProgressBar.style.width = Math.min(100, pourcentageComplet) + '%'; // Bloquer la barre à 100%
-        }
-
-        // Fonction pour simuler une nouvelle inscription
-        function simulerInscription() {
-            if (new Date() < dateDeLancement || new Date() > dateDeFin) {
-                return;
-            }
-
-            let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
-            inscriptionsSimuleesLive++;
-            localStorage.setItem('plxFakeSignups', inscriptionsSimuleesLive.toString());
-
-            mettreAJourCompteur();
-            
-            console.log("Nouvelle inscription simulée ! Total live : " + inscriptionsSimuleesLive);
-
-            const delaiAleatoire = Math.floor(Math.random() * (30000 - 8000 + 1)) + 8000; // Entre 8 et 30 secondes
-            setTimeout(simulerInscription, delaiAleatoire);
-        }
-
-        // --- Initialisation ---
-        mettreAJourCompteur();
-        
-        const premierDelai = Math.floor(Math.random() * (12000 - 5000 + 1)) + 5000; // Entre 5 et 12 secondes
-        setTimeout(simulerInscription, premierDelai);
-
-    });
-    </script>
-
-</body>
-
-</html>
