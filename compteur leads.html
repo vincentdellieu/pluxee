@@ -218,8 +218,6 @@
 <body>
 
     <div class="test-container">
-        <h1>Page de Test - Bannière Pluxee (V5)</h1>
-        <p><strong>TESTEZ LE RESPONSIVE :</strong> Réduisez la largeur de votre fenêtre pour voir la version mobile (barre de progression visible) et agrandissez-la (plus de 992px) pour voir la version desktop.</p>
 
         <div class="plx-fomo-banner">
           
@@ -250,9 +248,6 @@
                 </div>
             </div>
             
-        </div>
-
-        <p>(Contenu de la page qui continuerait ici...)</p>
     </div>
 
 
@@ -260,12 +255,12 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         // --- CONFIGURATION MODIFIÉE POUR LE TEST ---
-        const joursDansLePasse = 20; 
+        const joursDansLePasse = 3; 
         const dateDeLancement = new Date(new Date().getTime() - joursDansLePasse * 24 * 60 * 60 * 1000);
         
         // --- Paramètres de la campagne ---
         const dureeEnJours = 90;
-        const inscriptionsInitiales = 100;
+        const inscriptionsInitiales = 104;
         const inscriptionsTotalesCibles = 500;
         
         const inscriptionsASimuler = inscriptionsTotalesCibles - inscriptionsInitiales;
@@ -344,3 +339,4 @@
 
 </body>
 </html>
+
