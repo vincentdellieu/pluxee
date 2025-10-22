@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <title>Compteur Pluxee - Iframe</title>
+
     <style>
         :root {
             --plx-green: #00EB5E;
@@ -12,45 +13,39 @@
             --plx-white: #FFFFFF;
         }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f9f9f9;
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            color: #333;
-        }
-        
-        /* Conteneur pour le test */
-        .test-container {
-            padding: 20px;
-            max-width: 1200px; 
-            margin: 0 auto;
-            text-align: center;
-            /* Ajout d'un fond pour simuler le conteneur du site Pluxee */
-            background-color: #FFF;
-            border: 1px dashed #CCC;
-        }
-
-        /* * STYLE DE LA BANNIÈRE FOMO
+        /* * MODIFICATION CLÉ (V7): 
+         * Forcer le HTML et le BODY à remplir l'iframe.
          */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            box-sizing: border-box;
+            background-color: var(--plx-white); /* Fond blanc par défaut */
+        }
         
-        /* --- MOBILE (par défaut) --- */
+        /* * MODIFICATION CLÉ (V7): 
+         * Le conteneur principal prend 100% de la hauteur du body.
+         * Il devient un conteneur flex vertical pour placer l'en-tête et le corps.
+         */
         .plx-fomo-banner {
             width: 100%;
-            max-width: 450px; 
-            /* min-height: 100px;  <-- SUPPRIMÉ */
-            background-color: var(--plx-white);
-            border: 1px solid var(--plx-light-grey);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            height: 100%; 
             
-            /* MODIFICATION CLÉ: Plus de marge verticale, centrage horizontal auto */
-            margin: 0 auto; 
+            /* Suppression des styles gérés par le CMS parent */
+            border: none;
+            box-shadow: none;
+            margin: 0;
+            border-radius: 0; /* Le conteneur parent gère cela */
             
             box-sizing: border-box;
             overflow: hidden;
             color: var(--plx-dark-blue);
-            border-radius: 12px;
+            
+            /* Organisation verticale (header en haut, body en bas) */
+            display: flex;
+            flex-direction: column; 
         }
 
         /* En-tête du titre (bandeau sombre) */
@@ -60,10 +55,13 @@
             padding: 8px 10px; 
             font-weight: bold;
             font-size: 14px; 
-            border-radius: 12px 12px 0 0; 
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-shrink: 0; /* Empêche le header de rétrécir */
+
+            /* Le conteneur parent a des coins arrondis, on les applique ici aussi */
+            border-radius: 12px 12px 0 0;
         }
         
         .plx-header-icon {
@@ -74,13 +72,17 @@
             flex-shrink: 0;
         }
 
-        /* Corps de la bannière (contenu principal) */
+        /* * MODIFICATION CLÉ (V7): 
+         * Le corps prend toute la place restante (flex-grow: 1)
+         * et centre son propre contenu.
+         */
         .plx-banner-body {
             display: flex;
             flex-direction: column; 
-            justify-content: center;
+            justify-content: center; /* Centre verticalement */
             align-items: center;
-            padding: 10px; 
+            padding: 10px;
+            flex-grow: 1; /* <-- TRÈS IMPORTANT: prend la place restante */
         }
 
         .plx-banner-col {
@@ -140,23 +142,13 @@
             font-size: 1.1em;
         }
 
-
         /* --- DESKTOP (à partir de 992px) --- */
         @media (min-width: 992px) {
-            .plx-fomo-banner {
-                max-width: none; 
-                /* min-height: 150px; <-- SUPPRIMÉ */
-                
-                /* MODIFICATION CLÉ: Plus aucune marge */
-                margin: 0; 
-                
-                border-radius: 0;
-            }
-
             .plx-banner-header {
                 font-size: 20px; 
                 padding: 15px 20px;
-                border-radius: 0;
+                /* Sur desktop (mode bandeau), on suppose que le conteneur n'est pas arrondi */
+                border-radius: 0; 
             }
             
             .plx-header-icon {
@@ -213,51 +205,47 @@
 </head>
 <body>
 
-    <div class="test-container">
-    
-        <div class="plx-fomo-banner">
-          
-            <div class="plx-banner-header">
-                <svg class="plx-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
-                </svg>
-                <span>Offre exclusive limitée aux premiers 500 inscrits</span>
-            </div>
+    <div class="plx-fomo-banner">
+      
+        <div class="plx-banner-header">
+            <svg class="plx-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+            </svg>
+            <span>Offre exclusive limitée aux premiers 500 inscrits</span>
+        </div>
 
-            <div class="plx-banner-body">
-                <div class="plx-banner-col plx-banner-col-text">
-                    <p id="plx-main-counter">Rejoignez les <strong id="plx-count-total">100</strong> entreprises déjà inscrites</p>
-                </div>
-                
-                <div class="plx-banner-col plx-banner-col-progress">
-                    <div class="plx-progress-bar-wrapper">
-                        <span class="plx-progress-label-start">0</span>
-                        <div class="plx-progress-bar-container">
-                            <div id="plx-progress-bar-inner"></div>
-                        </div>
-                        <span class="plx-progress-label-end">500</span>
+        <div class="plx-banner-body">
+            <div class="plx-banner-col plx-banner-col-text">
+                <p id="plx-main-counter">Rejoignez les <strong id="plx-count-total">100</strong> entreprises déjà inscrites</p>
+            </div>
+            
+            <div class="plx-banner-col plx-banner-col-progress">
+                <div class="plx-progress-bar-wrapper">
+                    <span class="plx-progress-label-start">0</span>
+                    <div class="plx-progress-bar-container">
+                        <div id="plx-progress-bar-inner"></div>
                     </div>
-                </div>
-                
-                <div class="plx-banner-col plx-banner-col-remaining">
-                    <p id="plx-remaining-text">Plus que <strong id="plx-count-remaining">400</strong> places disponibles</p>
+                    <span class="plx-progress-label-end">500</span>
                 </div>
             </div>
             
+            <div class="plx-banner-col plx-banner-col-remaining">
+                <p id="plx-remaining-text">Plus que <strong id="plx-count-remaining">400</strong> places disponibles</p>
+            </div>
         </div>
+        
     </div>
-
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         // --- CONFIGURATION MODIFIÉE POUR LE TEST ---
-        const joursDansLePasse = 20; 
+        const joursDansLePasse = 2; 
         const dateDeLancement = new Date(new Date().getTime() - joursDansLePasse * 24 * 60 * 60 * 1000);
         
         // --- Paramètres de la campagne ---
         const dureeEnJours = 90;
-        const inscriptionsInitiales = 100;
+        const inscriptionsInitiales = 102;
         const inscriptionsTotalesCibles = 500;
         
         const inscriptionsASimuler = inscriptionsTotalesCibles - inscriptionsInitiales;
@@ -336,4 +324,3 @@
 
 </body>
 </html>
-
