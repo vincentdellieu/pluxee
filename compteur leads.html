@@ -13,37 +13,25 @@
             --plx-white: #FFFFFF;
         }
 
-        /* * MODIFICATION CLÉ (V7): 
-         * Forcer le HTML et le BODY à remplir l'iframe.
-         */
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
             box-sizing: border-box;
-            background-color: var(--plx-white); /* Fond blanc par défaut */
+            background-color: var(--plx-white); 
         }
         
-        /* * MODIFICATION CLÉ (V7): 
-         * Le conteneur principal prend 100% de la hauteur du body.
-         * Il devient un conteneur flex vertical pour placer l'en-tête et le corps.
-         */
         .plx-fomo-banner {
             width: 100%;
             height: 100%; 
-            
-            /* Suppression des styles gérés par le CMS parent */
             border: none;
             box-shadow: none;
             margin: 0;
-            border-radius: 0; /* Le conteneur parent gère cela */
-            
+            border-radius: 0; 
             box-sizing: border-box;
             overflow: hidden;
             color: var(--plx-dark-blue);
-            
-            /* Organisation verticale (header en haut, body en bas) */
             display: flex;
             flex-direction: column; 
         }
@@ -58,10 +46,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-shrink: 0; /* Empêche le header de rétrécir */
-
-            /* Le conteneur parent a des coins arrondis, on les applique ici aussi */
-            border-radius: 12px 12px 0 0;
+            flex-shrink: 0;
+            
+            /* MODIFICATION (V8): Suppression des coins arrondis pour remplir l'iframe */
+            /* border-radius: 12px 12px 0 0;  <-- SUPPRIMÉ */
         }
         
         .plx-header-icon {
@@ -72,17 +60,13 @@
             flex-shrink: 0;
         }
 
-        /* * MODIFICATION CLÉ (V7): 
-         * Le corps prend toute la place restante (flex-grow: 1)
-         * et centre son propre contenu.
-         */
         .plx-banner-body {
             display: flex;
             flex-direction: column; 
-            justify-content: center; /* Centre verticalement */
+            justify-content: center; 
             align-items: center;
             padding: 10px;
-            flex-grow: 1; /* <-- TRÈS IMPORTANT: prend la place restante */
+            flex-grow: 1; 
         }
 
         .plx-banner-col {
@@ -147,8 +131,7 @@
             .plx-banner-header {
                 font-size: 20px; 
                 padding: 15px 20px;
-                /* Sur desktop (mode bandeau), on suppose que le conteneur n'est pas arrondi */
-                border-radius: 0; 
+                border-radius: 0; /* Déjà correct pour desktop */
             }
             
             .plx-header-icon {
@@ -239,13 +222,13 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        // --- CONFIGURATION MODIFIÉE POUR LE TEST ---
-        const joursDansLePasse = 2; 
-        const dateDeLancement = new Date(new Date().getTime() - joursDansLePasse * 24 * 60 * 60 * 1000);
+        // --- CONFIGURATION DE PRODUCTION ---
+        // !! ASSUREZ-VOUS QUE C'EST VOTRE VRAIE DATE DE LANCEMENT !!
+        const dateDeLancement = new Date('2025-10-23T09:00:00'); // EXEMPLE: 23 Octobre 2025
         
         // --- Paramètres de la campagne ---
         const dureeEnJours = 90;
-        const inscriptionsInitiales = 102;
+        const inscriptionsInitiales = 100;
         const inscriptionsTotalesCibles = 500;
         
         const inscriptionsASimuler = inscriptionsTotalesCibles - inscriptionsInitiales;
@@ -261,7 +244,8 @@
             return;
         }
         
-        localStorage.setItem('plxFakeSignups', '0');
+        // MODIFICATION (V8): La ligne de réinitialisation a été SUPPRIMÉE
+        // localStorage.setItem('plxFakeSignups', '0'); 
 
         function mettreAJourCompteur() {
             const maintenant = new Date();
@@ -279,7 +263,10 @@
             }
 
             const inscriptionsDeBase = Math.floor(inscriptionsASimuler * pourcentageEcoule);
+            
+            // Le script lit la valeur "live" stockée, ou 0 s'il n'y en a pas
             let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
+            
             let totalInscriptionsActuelles = inscriptionsInitiales + inscriptionsDeBase + inscriptionsSimuleesLive;
 
             if (totalInscriptionsActuelles > inscriptionsTotalesCibles) {
@@ -305,18 +292,21 @@
 
             let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
             inscriptionsSimuleesLive++;
+            
+            // Le script enregistre la nouvelle valeur incrémentée
             localStorage.setItem('plxFakeSignups', inscriptionsSimuleesLive.toString());
 
             mettreAJourCompteur();
             
-            const delaiAleatoire = Math.floor(Math.random() * (30000 - 8000 + 1)) + 8000;
-            setTimeout(simulerInscription, delaiAleatoire);
+            // MODIFICATION (V8): Prochaine simulation dans 90 secondes fixes
+            setTimeout(simulerInscription, 90000); 
         }
 
         // --- Initialisation ---
         mettreAJourCompteur();
         
-        const premierDelai = Math.floor(Math.random() * (12000 - 5000 + 1)) + 5000;
+        // Premier délai aléatoire (10-25s) pour que l'utilisateur voie le compteur bouger
+        const premierDelai = Math.floor(Math.random() * (25000 - 10000 + 1)) + 10000;
         setTimeout(simulerInscription, premierDelai);
 
     });
