@@ -1,0 +1,320 @@
+compteur nl
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-M">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compteur Pluxee - Iframe</title>
+
+    <style>
+        :root {
+            --plx-green: #00EB5E;
+            --plx-dark-blue: #231C46;
+            --plx-light-grey: #f0f2f5;
+            --plx-white: #FFFFFF;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            box-sizing: border-box;
+            background-color: var(--plx-white); 
+        }
+        
+        .plx-fomo-banner {
+            width: 100%;
+            height: 100%; 
+            border: none;
+            box-shadow: none;
+            margin: 0;
+            border-radius: 0; 
+            box-sizing: border-box;
+            overflow: hidden;
+            color: var(--plx-dark-blue);
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .plx-banner-header {
+            background-color: var(--plx-dark-blue);
+            color: var(--plx-white);
+            padding: 8px 10px; 
+            font-weight: bold;
+            font-size: 14px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            border-radius: 0;
+        }
+        
+        .plx-header-icon {
+            fill: var(--plx-green);
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .plx-banner-body {
+            display: flex;
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center;
+            padding: 10px;
+            flex-grow: 1; 
+        }
+
+        .plx-banner-col {
+            width: 100%;
+        }
+        .plx-banner-col-text,
+        .plx-banner-col-remaining {
+            text-align: center;
+        }
+
+        #plx-main-counter {
+            font-size: 14px; 
+            margin: 0 0 6px 0;
+            line-height: 1.2;
+        }
+
+        .plx-progress-bar-wrapper {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 6px;
+        }
+
+        .plx-progress-label-start,
+        .plx-progress-label-end {
+            font-size: 12px; 
+            font-weight: bold;
+            color: var(--plx-dark-blue);
+        }
+
+        .plx-progress-bar-container {
+            flex-grow: 1;
+            height: 10px; 
+            background-color: var(--plx-light-grey);
+            border-radius: 10px;
+            margin: 0 8px; 
+            overflow: hidden;
+        }
+
+        #plx-progress-bar-inner {
+            height: 100%;
+            width: 20%; 
+            background-color: var(--plx-green);
+            border-radius: 10px;
+            transition: width 0.8s ease-out;
+        }
+        
+        #plx-remaining-text {
+            font-size: 14px; 
+            font-weight: bold;
+            margin: 0;
+        }
+
+        #plx-count-total,
+        #plx-count-remaining {
+            color: var(--plx-green);
+            font-size: 1.1em;
+        }
+
+        /* --- DESKTOP (à partir de 992px) --- */
+        @media (min-width: 992px) {
+            .plx-banner-header {
+                font-size: 20px; 
+                padding: 15px 20px;
+            }
+            
+            .plx-header-icon {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+            }
+
+            .plx-banner-body {
+                flex-direction: row; 
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 40px; 
+            }
+
+            .plx-banner-col {
+                width: auto; 
+            }
+            .plx-banner-col-text {
+                flex-basis: 40%;
+                text-align: left;
+            }
+            .plx-banner-col-progress {
+                flex-basis: 35%;
+            }
+            .plx-banner-col-remaining {
+                flex-basis: 25%;
+                text-align: right; 
+            }
+            
+            #plx-main-counter {
+                font-size: 18px; 
+                margin: 0;
+            }
+
+            .plx-progress-bar-container {
+                height: 20px;
+            }
+            .plx-progress-label-start,
+            .plx-progress-label-end {
+                font-size: 14px; 
+            }
+
+            #plx-remaining-text {
+                font-size: 20px; 
+            }
+
+            #plx-count-total,
+            #plx-count-remaining {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="plx-fomo-banner">
+      
+        <div class="plx-banner-header">
+            <svg class="plx-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+            </svg>
+            <span>Offre exclusive limitée aux premiers 500 inscrits</span>
+        </div>
+
+        <div class="plx-banner-body">
+            <div class="plx-banner-col plx-banner-col-text">
+                <p id="plx-main-counter">Rejoignez les <strong id="plx-count-total">263</strong> entreprises déjà inscrites</p>
+            </div>
+            
+            <div class="plx-banner-col plx-banner-col-progress">
+                <div class="plx-progress-bar-wrapper">
+                    <span class="plx-progress-label-start">0</span>
+                    <div class="plx-progress-bar-container">
+                        <div id="plx-progress-bar-inner"></div>
+                    </div>
+                    <span class="plx-progress-label-end">500</span>
+                </div>
+            </div>
+            
+            <div class="plx-banner-col plx-banner-col-remaining">
+                <p id="plx-remaining-text">Plus que <strong id="plx-count-remaining">237</strong> places disponibles</p>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- CONFIGURATION DE PRODUCTION (V9) ---
+        // !!! IMPORTANT: Ajustez cette date à votre date de lancement réelle !!!
+        // Pour les tests, je la règle à il y a 2 jours pour voir le compteur bouger.
+        const joursDansLePasse = 2;
+        const dateDeLancement = new Date(new Date().getTime() - (joursDansLePasse * 24 * 60 * 60 * 1000));
+        
+        // --- Paramètres de la campagne (V9) ---
+        const inscriptionsInitiales = 263; // MODIFIÉ: Démarrage à 263
+        const inscriptionsParJour = 28;  // NOUVEAU: Taux de 28/jour
+        const inscriptionsTotalesCibles = 500; // Cap (pour la barre de progression 0-500)
+        
+        // --- Selectors (inchangés) ---
+        const elTotal = document.getElementById('plx-count-total');
+        const elRemaining = document.getElementById('plx-count-remaining');
+        const elProgressBar = document.getElementById('plx-progress-bar-inner');
+
+        if (!elTotal || !elRemaining || !elProgressBar) {
+            console.warn('Éléments du compteur Pluxee non trouvés. Le script est arrêté.');
+            return;
+        }
+        
+        // Le localStorage est lu, pas réinitialisé, pour la persistance.
+
+        function mettreAJourCompteur() {
+            const maintenant = new Date();
+            
+            // Si la campagne n'a pas encore commencé, afficher le départ
+            if (maintenant < dateDeLancement) {
+                afficherValeurs(inscriptionsInitiales);
+                return;
+            }
+
+            // --- NOUVELLE LOGIQUE DE CALCUL (V9) ---
+            
+            // 1. Calculer le temps écoulé en millisecondes
+            const tempsEcouleMs = maintenant.getTime() - dateDeLancement.getTime();
+            
+            // 2. Convertir en jours (y compris les fractions de jour)
+            const joursEcoules = tempsEcouleMs / (1000 * 60 * 60 * 24);
+            
+            // 3. Calculer les inscriptions de base (jours * taux)
+            const inscriptionsDeBase = Math.floor(joursEcoules * inscriptionsParJour);
+            
+            // --- FIN NOUVELLE LOGIQUE ---
+
+            
+            // Lecture du compteur "live" (pour le "tick" de 90s)
+            let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
+            
+            // Total = Départ + Base (28/jour) + Live (ticks)
+            let totalInscriptionsActuelles = inscriptionsInitiales + inscriptionsDeBase + inscriptionsSimuleesLive;
+
+            // Capper le total à 500 (très important)
+            if (totalInscriptionsActuelles > inscriptionsTotalesCibles) { 
+                totalInscriptionsActuelles = inscriptionsTotalesCibles;
+            }
+
+            afficherValeurs(totalInscriptionsActuelles);
+        }
+
+        function afficherValeurs(total) {
+            const restantes = Math.max(0, inscriptionsTotalesCibles - total); 
+            const pourcentageComplet = (total / inscriptionsTotalesCibles) * 100;
+
+            elTotal.textContent = total;
+            elRemaining.textContent = restantes + (restantes <= 1 ? ' place' : ' places');
+            elProgressBar.style.width = Math.min(100, pourcentageComplet) + '%'; 
+        }
+
+        function simulerInscription() {
+            // Ne simule pas si la campagne n'a pas commencé
+            if (new Date() < dateDeLancement) {
+                return;
+            }
+            
+            let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
+            inscriptionsSimuleesLive++;
+            
+            localStorage.setItem('plxFakeSignups', inscriptionsSimuleesLive.toString());
+
+            mettreAJourCompteur();
+            
+            // Prochaine simulation dans 90 secondes
+            setTimeout(simulerInscription, 90000); 
+        }
+
+        // --- Initialisation ---
+        mettreAJourCompteur();
+        
+        // Premier délai aléatoire (10-25s) pour la première simulation
+        const premierDelai = Math.floor(Math.random() * (25000 - 10000 + 1)) + 10000;
+        setTimeout(simulerInscription, premierDelai);
+
+    });
+    </script>
+
+</body>
+</html>
