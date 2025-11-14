@@ -210,7 +210,7 @@
             </div>
             
             <div class="plx-banner-col plx-banner-col-remaining">
-                <p id="plx-remaining-text">Nog maar <strong id="plx-count-remaining">237</strong> plaatsen vrij</p>
+                <p id="plx-remaining-text">Nog maar <strong id="plx-count-remaining">237</strong> vrij</p>
             </div>
         </div>
         
@@ -284,7 +284,7 @@
             const pourcentageComplet = (total / inscriptionsTotalesCibles) * 100;
 
             elTotal.textContent = total;
-            elRemaining.textContent = restantes + (restantes <= 1 ? ' place' : ' places');
+            elRemaining.textContent = restantes + (restantes <= 1 ? ' plaats' : ' plaatsen');
             elProgressBar.style.width = Math.min(100, pourcentageComplet) + '%'; 
         }
 
@@ -318,6 +318,7 @@
 </body>
 
 </html>
+
 
 
 
