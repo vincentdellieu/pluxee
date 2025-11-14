@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-M">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compteur Pluxee - Iframe</title>
 
@@ -36,7 +36,6 @@
             flex-direction: column; 
         }
 
-        /* En-tête du titre (bandeau sombre) */
         .plx-banner-header {
             background-color: var(--plx-dark-blue);
             color: var(--plx-white);
@@ -47,9 +46,7 @@
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
-            
-            /* MODIFICATION (V8): Suppression des coins arrondis pour remplir l'iframe */
-            /* border-radius: 12px 12px 0 0;  <-- SUPPRIMÉ */
+            border-radius: 0;
         }
         
         .plx-header-icon {
@@ -131,7 +128,6 @@
             .plx-banner-header {
                 font-size: 20px; 
                 padding: 15px 20px;
-                border-radius: 0; /* Déjà correct pour desktop */
             }
             
             .plx-header-icon {
@@ -194,12 +190,12 @@
             <svg class="plx-header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
             </svg>
-            <span>Offre exclusive limitée aux 500 premiers inscrits</span>
+            <span>Offre exclusive limitée aux premiers 500 inscrits</span>
         </div>
 
         <div class="plx-banner-body">
             <div class="plx-banner-col plx-banner-col-text">
-                <p id="plx-main-counter">Rejoignez les <strong id="plx-count-total">100</strong> entreprises déjà inscrites</p>
+                <p id="plx-main-counter">Rejoignez les <strong id="plx-count-total">263</strong> entreprises déjà inscrites</p>
             </div>
             
             <div class="plx-banner-col plx-banner-col-progress">
@@ -213,7 +209,7 @@
             </div>
             
             <div class="plx-banner-col plx-banner-col-remaining">
-                <p id="plx-remaining-text">Plus que <strong id="plx-count-remaining">400</strong> disponibles</p>
+                <p id="plx-remaining-text">Plus que <strong id="plx-count-remaining">237</strong> places disponibles</p>
             </div>
         </div>
         
@@ -222,19 +218,18 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        // --- CONFIGURATION DE PRODUCTION ---
-        // !! ASSUREZ-VOUS QUE C'EST VOTRE VRAIE DATE DE LANCEMENT !!
-        const dateDeLancement = new Date('2025-10-23T09:00:00'); // EXEMPLE: 23 Octobre 2025
+        // --- CONFIGURATION DE PRODUCTION (V9) ---
+        // !!! IMPORTANT: Ajustez cette date à votre date de lancement réelle !!!
+        // Pour les tests, je la règle à il y a 2 jours pour voir le compteur bouger.
+        const joursDansLePasse = 2;
+        const dateDeLancement = new Date(new Date().getTime() - (joursDansLePasse * 24 * 60 * 60 * 1000));
         
-        // --- Paramètres de la campagne ---
-        const dureeEnJours = 90;
-        const inscriptionsInitiales = 121;
-        const inscriptionsTotalesCibles = 500;
+        // --- Paramètres de la campagne (V9) ---
+        const inscriptionsInitiales = 263; // MODIFIÉ: Démarrage à 263
+        const inscriptionsParJour = 28;  // NOUVEAU: Taux de 28/jour
+        const inscriptionsTotalesCibles = 500; // Cap (pour la barre de progression 0-500)
         
-        const inscriptionsASimuler = inscriptionsTotalesCibles - inscriptionsInitiales;
-        const dateDeFin = new Date(dateDeLancement.getTime() + dureeEnJours * 24 * 60 * 60 * 1000);
-        const dureeTotaleMs = dateDeFin.getTime() - dateDeLancement.getTime();
-        
+        // --- Selectors (inchangés) ---
         const elTotal = document.getElementById('plx-count-total');
         const elRemaining = document.getElementById('plx-count-remaining');
         const elProgressBar = document.getElementById('plx-progress-bar-inner');
@@ -244,32 +239,39 @@
             return;
         }
         
-        // MODIFICATION (V8): La ligne de réinitialisation a été SUPPRIMÉE
-        // localStorage.setItem('plxFakeSignups', '0'); 
+        // Le localStorage est lu, pas réinitialisé, pour la persistance.
 
         function mettreAJourCompteur() {
             const maintenant = new Date();
             
+            // Si la campagne n'a pas encore commencé, afficher le départ
             if (maintenant < dateDeLancement) {
                 afficherValeurs(inscriptionsInitiales);
                 return;
             }
 
-            const tempsEcouleMs = maintenant.getTime() - dateDeLancement.getTime();
-            let pourcentageEcoule = tempsEcouleMs / dureeTotaleMs;
-
-            if (pourcentageEcoule > 1) {
-                pourcentageEcoule = 1;
-            }
-
-            const inscriptionsDeBase = Math.floor(inscriptionsASimuler * pourcentageEcoule);
+            // --- NOUVELLE LOGIQUE DE CALCUL (V9) ---
             
-            // Le script lit la valeur "live" stockée, ou 0 s'il n'y en a pas
+            // 1. Calculer le temps écoulé en millisecondes
+            const tempsEcouleMs = maintenant.getTime() - dateDeLancement.getTime();
+            
+            // 2. Convertir en jours (y compris les fractions de jour)
+            const joursEcoules = tempsEcouleMs / (1000 * 60 * 60 * 24);
+            
+            // 3. Calculer les inscriptions de base (jours * taux)
+            const inscriptionsDeBase = Math.floor(joursEcoules * inscriptionsParJour);
+            
+            // --- FIN NOUVELLE LOGIQUE ---
+
+            
+            // Lecture du compteur "live" (pour le "tick" de 90s)
             let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
             
+            // Total = Départ + Base (28/jour) + Live (ticks)
             let totalInscriptionsActuelles = inscriptionsInitiales + inscriptionsDeBase + inscriptionsSimuleesLive;
 
-            if (totalInscriptionsActuelles > inscriptionsTotalesCibles) {
+            // Capper le total à 500 (très important)
+            if (totalInscriptionsActuelles > inscriptionsTotalesCibles) { 
                 totalInscriptionsActuelles = inscriptionsTotalesCibles;
             }
 
@@ -277,35 +279,35 @@
         }
 
         function afficherValeurs(total) {
-            const restantes = Math.max(0, inscriptionsTotalesCibles - total);
+            const restantes = Math.max(0, inscriptionsTotalesCibles - total); 
             const pourcentageComplet = (total / inscriptionsTotalesCibles) * 100;
 
             elTotal.textContent = total;
             elRemaining.textContent = restantes + (restantes <= 1 ? ' place' : ' places');
-            elProgressBar.style.width = Math.min(100, pourcentageComplet) + '%';
+            elProgressBar.style.width = Math.min(100, pourcentageComplet) + '%'; 
         }
 
         function simulerInscription() {
-            if (new Date() < dateDeLancement || new Date() > dateDeFin) {
+            // Ne simule pas si la campagne n'a pas commencé
+            if (new Date() < dateDeLancement) {
                 return;
             }
-
+            
             let inscriptionsSimuleesLive = parseInt(localStorage.getItem('plxFakeSignups') || '0');
             inscriptionsSimuleesLive++;
             
-            // Le script enregistre la nouvelle valeur incrémentée
             localStorage.setItem('plxFakeSignups', inscriptionsSimuleesLive.toString());
 
             mettreAJourCompteur();
             
-            // MODIFICATION (V8): Prochaine simulation dans 90 secondes fixes
+            // Prochaine simulation dans 90 secondes
             setTimeout(simulerInscription, 90000); 
         }
 
         // --- Initialisation ---
         mettreAJourCompteur();
         
-        // Premier délai aléatoire (10-25s) pour que l'utilisateur voie le compteur bouger
+        // Premier délai aléatoire (10-25s) pour la première simulation
         const premierDelai = Math.floor(Math.random() * (25000 - 10000 + 1)) + 10000;
         setTimeout(simulerInscription, premierDelai);
 
@@ -314,6 +316,3 @@
 
 </body>
 </html>
-
-
-
